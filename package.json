@@ -1,11 +1,12 @@
 {
   "name": "ireqs",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "author": "joaoeudes7",
   "license": "MIT",
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "lint": "tslint -p tsconfig.json"
+    "lint": "tslint -p tsconfig.json",
+    "prepublish": "yarn build"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
