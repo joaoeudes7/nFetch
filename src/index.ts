@@ -1,7 +1,7 @@
 import { IConfig } from './model/IConfigs';
 import { IResponse } from './model/IResponse';
 
-export class rfetch {
+export class nfetch {
 
     private configs: IConfig = {
         headers: {'Content-Type': 'application/json'}
@@ -51,4 +51,4 @@ export class rfetch {
 }
 
 
-export default new rfetch();
+export default new nfetch();
