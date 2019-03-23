@@ -10,10 +10,10 @@ Simplified HTTP request client (< 1kb)
 For convenience aliases have been provided for all supported request methods.
 
 ```js
-nfetch.get(url[, config])
-nfetch.delete(url[, config])
-nfetch.post(url[, data[, config]])
-nfetch.put(url[, data[, config]])
+nfetch.get(url, config)
+nfetch.delete(url, config)
+nfetch.post(url, data, config)
+nfetch.put(url, data, config)
 ```
 
 ## Configure API
