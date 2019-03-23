@@ -1,0 +1,21 @@
+{
+  "name": "ireqs",
+  "version": "1.0.5",
+  "main": "dist/index.js",
+  "author": "joaoeudes7",
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "lint": "tslint -p tsconfig.json",
+    "postversion": "git push && git push --tags"
+  },
+  "devDependencies": {
+    "ts-node": "^8.0.3",
+    "tslib": "^1.9.3",
+    "tslint": "^5.14.0",
+    "typescript": "^3.3.4000"
+  },
+  "files": [
+    "./dist/**"
+  ]
+}
