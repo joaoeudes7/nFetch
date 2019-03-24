@@ -1,6 +1,6 @@
 {
   "name": "nfetch",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": {
     "name": "João Eudes Lima",
     "email": "joaoeudes7@gmail.com",
@@ -12,7 +12,7 @@
     "build": "rm -rf dist && tsc",
     "lint": "tslint -p tsconfig.json",
     "prepublish": "yarn build",
-    "postversion" : "git push && git push --tags"
+    "postversion": "git push && git push --tags"
   },
   "keywords": [
     "requests",
