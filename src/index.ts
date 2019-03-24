@@ -35,7 +35,7 @@ export class nfetch {
         clearTimeout(timeout);
 
         const { json, headers, status } = res;
-        return { headers, status, data: json() };
+        return { headers, status, data: await json() };
     };
 
     get(url: string, data?: object, configs?: IConfig) {
