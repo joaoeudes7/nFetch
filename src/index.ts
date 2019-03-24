@@ -5,58 +5,53 @@ export class nfetch {
 
     private configs: IConfig = {
         timeout: 5000,
-        headers: {
+    	redirect: 'follow',
+        headers: new Headers({
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Authorization': 'Bearer '
-        }
+        })
     };
 
     constructor(configs?: IConfig) {
         this.configs = Object.assign(this.configs, configs);
     };
 
-    private generateRequest(_type: string, _url: string, _data?: object, _headers?: Headers): Promise<IResponse> {
-        let didTimeOut = false;
+    private async generateRequest(method: string, url: string, _data?: object, configs = this.configs) {
         const requestInit = {
-            method: _type,
+            method,
             body: JSON.stringify(_data),
-            headers: Object.assign(this.configs.headers, _headers)
-        }
+            headers: configs.headers
+        };
 
-        return new Promise((resolve, reject) => {
-            const timeout = setTimeout(async () => {
-                didTimeOut = true;
-                reject(new Error('Request timed out'));
-            });
-
-
-            window.fetch(_url, requestInit)
-                .then(res => {
-                    clearTimeout(timeout);
-                    if (!didTimeOut) {
-                        const { json, headers, status, url } = res;
-                        resolve({ headers, status, url, data: json() });
-                    }
-                })
-                .catch(error => reject(error));
+        const timeout = setTimeout(() => {
+            new Error('Request timed out');
+            return { headers: requestInit.headers, status: 408, data: null  }
         });
+
+        // Get response
+        const res = await window.fetch(url, requestInit);
+
+        // Cancell timeout
+        clearTimeout(timeout);
+
+        const { json, headers, status } = res;
+        return { headers, status, data: json() };
     };
 
-    get(url: string, data?: object, headers?: Headers) {
-        return this.generateRequest("GET", url, data, headers);
+    get(url: string, data?: object, configs?: IConfig) {
+        return this.generateRequest("GET", url, data, configs);
     };
 
-    post(url: string, data?: object, headers?: Headers) {
-        return this.generateRequest("POST", url, data, headers);
+    post(url: string, data?: object, configs?: IConfig) {
+        return this.generateRequest("POST", url, data, configs);
     };
 
-    delete(url: string, data?: object, headers?: Headers) {
-        return this.generateRequest("DELETE", url, data, headers);
+    delete(url: string, data?: object, configs?: IConfig) {
+        return this.generateRequest("DELETE", url, data, configs);
     };
 
-    put(url: string, data?: object, headers?: Headers) {
-        return this.generateRequest("PUT", url, data, headers);
+    put(url: string, data?: object, configs?: IConfig) {
+        return this.generateRequest("PUT", url, data, configs);
     };
 
     async all(requests: Promise<IResponse>[]) {
@@ -71,3 +66,5 @@ export class nfetch {
 
 
 export default new nfetch();
+
+new nfetch().get('').then(r => r)

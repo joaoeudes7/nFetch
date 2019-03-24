@@ -1,6 +1,6 @@
 export interface IConfig {
     apiUrl?: string;
-    headers?: any;
+    headers?: Headers;
     mode?: string;
     redirect?: string;
     referrer?: string;
