@@ -11,7 +11,8 @@
   "scripts": {
     "build": "rm -rf dist && tsc",
     "lint": "tslint -p tsconfig.json",
-    "prepublish": "yarn build"
+    "prepublish": "yarn build",
+    "postversion" : "git push && git push --tags"
   },
   "keywords": [
     "requests",
