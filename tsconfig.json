@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
+    "lib": ["es2018", "dom"],
     "strict": true,
     "importHelpers": true,
     "moduleResolution": "node",
@@ -18,13 +19,12 @@
         "src/*"
       ]
     },
-    "lib": ["es2018", "dom"]
   },
   "include": [
-    "src/**/*.ts",
-    "tests/**/*.ts",
+    "src/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/*.spec.ts"
   ]
 }
