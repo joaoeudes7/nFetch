@@ -1,67 +1,72 @@
 import { IConfig } from './model/IConfigs';
 import { IResponse } from './model/IResponse';
 
+enum STATUS {
+  TIMEOUT = 408
+}
+
 export class nfetch {
 
-    private configs: IConfig = {
-        timeout: 5000,
-    	redirect: 'follow',
-        headers: new Headers({
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        })
+  private configs: IConfig = {
+    timeout: 10000,
+    redirect: 'follow',
+    headers: [
+      { 'Content-Type': 'application/json' },
+      { 'Accept': 'application/json' }
+    ]
+  };
+
+  constructor(configs?: IConfig) {
+    this.configs = Object.assign(this.configs, configs);
+  };
+
+  private generateRequest = async (method: string, url: string, _data?: object, configs = this.configs) => {
+    const requestInit = {
+      method,
+      body: JSON.stringify(_data),
+      headers: configs.headers
     };
 
-    constructor(configs?: IConfig) {
-        this.configs = Object.assign(this.configs, configs);
-    };
+    const timeout = setTimeout(() => {
+      new Error('Request timed out');
+      return { headers: requestInit.headers, status: STATUS.TIMEOUT, data: null }
+    }, configs.timeout);
 
-    private async generateRequest(method: string, url: string, _data?: object, configs = this.configs) {
-        const requestInit = {
-            method,
-            body: JSON.stringify(_data),
-            headers: configs.headers
-        };
+    // Get response
+    const res = await fetch(url, requestInit);
+    const data = await res.json();
 
-        const timeout = setTimeout(() => {
-            new Error('Request timed out');
-            return { headers: requestInit.headers, status: 408, data: null  }
-        });
+    // Cancell timeout
+    clearTimeout(timeout);
 
-        // Get response
-        const res = await window.fetch(url, requestInit);
+    const { headers, status } = res;
+    return { headers, status, data };
+  };
 
-        // Cancell timeout
-        clearTimeout(timeout);
+  get(url: string, configs?: IConfig) {
+    return this.generateRequest("GET", url, undefined, configs);
+  };
 
-        const { json, headers, status } = res;
-        return { headers, status, data: json() };
-    };
+  post(url: string, data: object, configs?: IConfig) {
+    return this.generateRequest("POST", url, data, configs);
+  };
 
-    get(url: string, data?: object, configs?: IConfig) {
-        return this.generateRequest("GET", url, data, configs);
-    };
+  delete(url: string, data?: object, configs?: IConfig) {
+    return this.generateRequest("DELETE", url, data, configs);
+  };
 
-    post(url: string, data?: object, configs?: IConfig) {
-        return this.generateRequest("POST", url, data, configs);
-    };
+  put(url: string, data?: object, configs?: IConfig) {
+    return this.generateRequest("PUT", url, data, configs);
+  };
 
-    delete(url: string, data?: object, configs?: IConfig) {
-        return this.generateRequest("DELETE", url, data, configs);
-    };
-
-    put(url: string, data?: object, configs?: IConfig) {
-        return this.generateRequest("PUT", url, data, configs);
-    };
-
-    async all(requests: Promise<IResponse>[]) {
-        const data: IResponse[] = [];
-        for (let index = 0; index < requests.length; index++) {
-            data.push(await requests[index]);
-        }
-
-        return data;
+  async all(requests: Promise<IResponse>[]) {
+    const data: IResponse[] = [];
+    for (let index = 0; index < requests.length; index++) {
+      data.push(await requests[index]);
     }
+
+    return data;
+  }
 }
 
 

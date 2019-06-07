@@ -1,5 +1,5 @@
 export interface IResponse {
-    headers: Headers;
-    status: number;
-    data: Promise<any>;
+  headers: any;
+  status: number;
+  data: Promise<any>;
 }
