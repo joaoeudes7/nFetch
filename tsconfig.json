@@ -1,18 +1,18 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "moduleResolution": "node",
+    "target": "es6",
     "module": "esnext",
     "lib": ["es2018", "dom"],
     "strict": true,
     "importHelpers": true,
-    "moduleResolution": "node",
+    "strictNullChecks": false,
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "outDir": "./dist",
     "declaration": true,
-    "declarationDir": "./dist",
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "baseUrl": ".",
     "paths": {
       "@/*": [

@@ -1,13 +1,9 @@
 import { IConfig } from './model/IConfigs';
-import { IResponse } from './model/IResponse';
-
-enum STATUS {
-  TIMEOUT = 408
-}
+import { Response, STATUS, METHOD } from './model/Response';
 
 export class nfetch {
 
-  private configs: IConfig = {
+  public configs: IConfig = {
     timeout: 10000,
     redirect: 'follow',
     headers: [
@@ -17,50 +13,49 @@ export class nfetch {
   };
 
   constructor(configs?: IConfig) {
-    this.configs = Object.assign(this.configs, configs);
+    this.configs = { ...this.configs, ...configs };
   };
 
-  private generateRequest = async (method: string, url: string, _data?: object, configs = this.configs) => {
-    const requestInit = {
-      method,
-      body: JSON.stringify(_data),
-      headers: configs.headers
-    };
+  private requestFactory(method: METHOD, data: any, configs: any) {
+    const body = JSON.stringify(data);
+    const headers = configs.headers;
 
-    const timeout = setTimeout(() => {
-      new Error('Request timed out');
-      return { headers: requestInit.headers, status: STATUS.TIMEOUT, data: null }
-    }, configs.timeout);
+    return { method, body, headers };
+  }
+
+  private async request (method: METHOD, url: string, _data?: object, configs = this.configs): Promise<Response> {
+    const request = this.requestFactory(method, _data, configs)
+
+    const initTimeout = setTimeout(() => new Response(request.headers, STATUS.TIMEOUT, {}), configs.timeout);
 
     // Get response
-    const res = await fetch(url, requestInit);
+    const res = await fetch(url, request);
     const data = await res.json();
 
     // Cancell timeout
-    clearTimeout(timeout);
+    clearTimeout(initTimeout);
 
-    const { headers, status } = res;
-    return { headers, status, data };
+    return new Response(res.headers, res.status, data);
   };
 
   get(url: string, configs?: IConfig) {
-    return this.generateRequest("GET", url, undefined, configs);
+    return this.request(METHOD.GET, url, undefined, configs);
   };
 
   post(url: string, data: object, configs?: IConfig) {
-    return this.generateRequest("POST", url, data, configs);
+    return this.request(METHOD.POST, url, data, configs);
   };
 
   delete(url: string, data?: object, configs?: IConfig) {
-    return this.generateRequest("DELETE", url, data, configs);
+    return this.request(METHOD.DELETE, url, data, configs);
   };
 
-  put(url: string, data?: object, configs?: IConfig) {
-    return this.generateRequest("PUT", url, data, configs);
+  put(url: string, data: object, configs?: IConfig) {
+    return this.request(METHOD.PUT, url, data, configs);
   };
 
-  async all(requests: Promise<IResponse>[]) {
-    const data: IResponse[] = [];
+  async all(requests: Promise<Response>[]): Promise<Response[]> {
+    const data: Response[] = [];
     for (let index = 0; index < requests.length; index++) {
       data.push(await requests[index]);
     }
