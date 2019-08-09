@@ -1,59 +1,58 @@
-import { IConfig } from './model/IConfigs';
-import { Response, STATUS, METHOD } from './model/Response';
+import { Response } from './model/Response';
+import { Config, Method } from './model/Config';
 
 export class nfetch {
 
-  public configs: IConfig = {
-    timeout: 10000,
-    redirect: 'follow',
-    headers: new Headers()
-  };
+  public configs = new Config();
 
-  constructor(configs?: IConfig) {
+  constructor(configs?: Config) {
     this.configs = Object.assign(this.configs, configs);
   }
 
-  get = (url: string, configs?: IConfig) => this.request(METHOD.GET, url, undefined, configs);
-  post = (url: string, data: object, configs?: IConfig) => this.request(METHOD.POST, url, data, configs);
-  delete = (url: string, data?: object, configs?: IConfig) => this.request(METHOD.DELETE, url, data, configs);
-  put = (url: string, data: object, configs?: IConfig) => this.request(METHOD.PUT, url, data, configs);
+  get = (url: string, configs?: Config) => this.onRequest(Method.get, url, undefined, configs);
+  delete = (url: string, data?: object, configs?: Config) => this.onRequest(Method.delete, url, data, configs);
+  post = (url: string, data: object, configs?: Config) => this.onRequest(Method.post, url, data, configs);
+  put = (url: string, data: object, configs?: Config) => this.onRequest(Method.put, url, data, configs);
 
   public async all(requests: Array<Promise<Response>>): Promise<Response[]> {
-    const data: Response[] = [];
+    let data: Response[] = [];
 
-    try {
-      requests.forEach(async (req) => {
-        data.push(await req);
-      });
-    } catch (error) {
-      return error
+    for (let req of requests) {
+      data.push(await req);
     }
 
     return data;
   }
 
-  private requestFactory(method: METHOD, data: any, configs: any) {
+  private requestFactory(method: Method, data: any, configs?: Config): RequestInit {
     const body = JSON.stringify(data);
-    const headers = configs.headers;
+    let _request = Object.assign(this.configs, { method, body })
 
-    return { method, body, headers };
+    if (configs != null) {
+      _request = Object.assign(_request, { ...configs });
+    }
+
+    return _request
   }
 
-  private async request(method: METHOD, url: string, body?: any, configs = this.configs): Promise<Response> {
+  private async onRequest(method: Method, url: string, body?: any, configs?: Config): Promise<Response> {
     const request = this.requestFactory(method, body, configs);
 
     const initTimeout = setTimeout(() => {
-      return new Response(request.headers, STATUS.TIMEOUT, {})
-    }, configs.timeout);
+      const status = 408;
+
+      throw new Response(status, url, {}, headers)
+    }, this.configs.timeout);
 
     // Get response
     const res = await fetch(url, request);
     const data = await res.json();
+    const { status, statusText, headers } = res;
 
     // Cancell timeout
     clearTimeout(initTimeout);
 
-    return new Response(res.headers, res.status, data);
+    return new Response(status, url, data, headers);
   }}
 
 

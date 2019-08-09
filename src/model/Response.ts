@@ -1,28 +1,16 @@
 export class Response {
-  public headers: any;
-  public status: STATUS;
-  public data: any;
+  url: string;
+  data?: any;
+  status: number;
+  headers?: Headers;
 
-  constructor(headers: any, status: number, data: any) {
-    this.headers = headers;
+  constructor(status: number,  url: string, data?: any, headers?: Headers) {
     this.status = status;
+    this.url = url;
     this.data = data;
+    this.headers = headers;
   }
-
   public toObject<T>() {
-    return async () => Object.assign({} as T, await this.data);
+    return async () => Object.assign({} as T, this.data);
   }
-}
-
-export enum METHOD {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  DELETE = 'DELETE',
-}
-
-export enum STATUS {
-  SUCESS = 200,
-  ERROR = 500,
-  TIMEOUT = 408,
 }
