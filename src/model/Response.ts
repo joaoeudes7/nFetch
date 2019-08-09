@@ -9,7 +9,7 @@ export class Response {
     this.data = data;
   }
 
-  public toObject<T>(obj: T) {
+  public toObject<T>() {
     return async () => Object.assign({} as T, await this.data);
   }
 }
