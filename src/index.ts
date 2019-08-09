@@ -47,7 +47,7 @@ export class nfetch {
     // Get response
     const res = await fetch(url, request);
     const data = await res.json();
-    const { status, statusText, headers } = res;
+    const { status, headers } = res;
 
     // Cancell timeout
     clearTimeout(initTimeout);
