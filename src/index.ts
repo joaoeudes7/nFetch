@@ -1,18 +1,18 @@
 import { Response } from './model/Response';
-import { Config, Method } from './model/Config';
+import { Config, IConfig, Method } from './model/Config';
 
 export class nfetch {
 
   public configs = new Config();
 
-  constructor(configs?: Config) {
+  constructor(configs?: IConfig) {
     this.configs = Object.assign(this.configs, configs);
   }
 
-  get = (url: string, configs?: Config) => this.onRequest(Method.get, url, undefined, configs);
-  delete = (url: string, data?: object, configs?: Config) => this.onRequest(Method.delete, url, data, configs);
-  post = (url: string, data: object, configs?: Config) => this.onRequest(Method.post, url, data, configs);
-  put = (url: string, data: object, configs?: Config) => this.onRequest(Method.put, url, data, configs);
+  get = (url: string, configs?: IConfig) => this.onRequest(Method.get, url, undefined, configs);
+  delete = (url: string, data?: object, configs?: IConfig) => this.onRequest(Method.delete, url, data, configs);
+  post = (url: string, data: object, configs?: IConfig) => this.onRequest(Method.post, url, data, configs);
+  put = (url: string, data: object, configs?: IConfig) => this.onRequest(Method.put, url, data, configs);
 
   public async all(requests: Array<Promise<Response>>): Promise<Response[]> {
     let data: Response[] = [];
@@ -24,7 +24,7 @@ export class nfetch {
     return data;
   }
 
-  private requestFactory(method: Method, data: any, configs?: Config): RequestInit {
+  private requestFactory(method: Method, data: any, configs?: IConfig): RequestInit {
     const body = JSON.stringify(data);
     let _request = Object.assign(this.configs, { method, body })
 
@@ -35,7 +35,7 @@ export class nfetch {
     return _request
   }
 
-  private async onRequest(method: Method, url: string, body?: any, configs?: Config): Promise<Response> {
+  private async onRequest(method: Method, url: string, body?: any, configs?: IConfig): Promise<Response> {
     const request = this.requestFactory(method, body, configs);
 
     const initTimeout = setTimeout(() => {

@@ -7,7 +7,19 @@ export enum Method {
   put = 'put'
 }
 
-export class Config implements RequestInit {
+export interface IConfig {
+  cache?: RequestCache;
+  credentials?: RequestCredentials;
+  headers?: Headers;
+  integrity?: string;
+  keepalive?: boolean;
+  method?: Method;
+  mode?: RequestMode;
+  referrerPolicy?: ReferrerPolicy;
+  timeout?: number;
+}
+
+export class Config implements IConfig, RequestInit {
   body?: BodyInit | null;
   cache?: RequestCache = "default";
   credentials?: RequestCredentials;
