@@ -64,7 +64,7 @@ api.get('/posts')
 ```
 
 ## Docs Parameters
-[Click here to view doc of parameters](./docs/parameters)
+[Click here to view doc of parameters](docs/PARAMETERS.md)
 
 ## Demo
 Click here to view in Browser:
