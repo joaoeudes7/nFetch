@@ -4,11 +4,11 @@
     "module": "es6",
     "moduleResolution": "node",
     "lib": [
+      "es5",
       "dom",
       "esnext"
     ],
     "outDir": "./dist",
-    "importHelpers": true,
     "strictFunctionTypes": true,
     "strictNullChecks": true,
     "noFallthroughCasesInSwitch": true,
