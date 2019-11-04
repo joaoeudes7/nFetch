@@ -3,6 +3,7 @@ import { Header } from "./Header";
 export type RequestMethod = 'get' | 'post' | 'delete' | 'put'
 
 export interface IConfig {
+  baseUrl?: string;
   cache?: RequestCache;
   credentials?: RequestCredentials;
   headers?: Headers;
@@ -15,6 +16,7 @@ export interface IConfig {
 }
 
 export class Config implements IConfig, RequestInit {
+  baseUrl?: string;
   body?: BodyInit | null;
   cache: RequestCache = "default";
   credentials?: RequestCredentials;
