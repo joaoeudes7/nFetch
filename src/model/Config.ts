@@ -1,21 +1,30 @@
 import { Header } from "./Header";
 
-export enum Method {
-  get = 'get',
-  post = 'post',
-  delete = 'delete',
-  put = 'put'
+export type RequestMethod = 'get' | 'post' | 'delete' | 'put'
+
+export interface IConfig {
+  baseUrl?: string;
+  cache?: RequestCache;
+  credentials?: RequestCredentials;
+  headers?: Headers;
+  integrity?: string;
+  keepalive?: boolean;
+  method?: RequestMethod;
+  mode?: RequestMode;
+  referrerPolicy?: ReferrerPolicy;
+  timeout?: number;
 }
 
-export class Config implements RequestInit {
+export class Config implements IConfig, RequestInit {
+  baseUrl?: string;
   body?: BodyInit | null;
-  cache?: RequestCache = "default";
+  cache: RequestCache = "default";
   credentials?: RequestCredentials;
   headers = new Headers();
   integrity?: string;
   keepalive?: boolean;
-  method?: Method;
-  mode?: RequestMode = "cors";
+  method?: RequestMethod;
+  mode: RequestMode = "cors";
   redirect?: RequestRedirect;
   referrer?: string;
   referrerPolicy?: ReferrerPolicy;

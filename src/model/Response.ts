@@ -10,7 +10,11 @@ export class Response {
     this.data = data;
     this.headers = headers;
   }
+
+  /**
+   * Funcional only in Typescript
+   */
   public toObject<T>() {
-    return async () => Object.assign({} as T, this.data);
+    return Object.assign({} as T, this.data);
   }
 }
