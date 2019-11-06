@@ -51,7 +51,7 @@ export class nfetch {
       const status = 408;
       const headers = this.configs.headers;
 
-      throw new Response(status, pathRequest, {}, headers);
+      throw new Response(method, status, pathRequest, {}, headers);
     }, this.configs.timeout);
 
     // Get response
@@ -62,7 +62,7 @@ export class nfetch {
     // Cancell timeout
     clearTimeout(initTimeout);
 
-    return new Response(status, pathRequest, data, headers);
+    return new Response(method, status, pathRequest, data, headers);
   }
 }
 
