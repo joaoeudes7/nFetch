@@ -1,6 +1,6 @@
 {
   "name": "nfetch",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "author": {
     "name": "João Eudes Lima",
     "email": "joaoeudes7@gmail.com",
@@ -22,8 +22,9 @@
     "fetch",
     "api"
   ],
+  "types": "dist/esm/index.d.ts",
+  "module": "dist/esm/index.js",
   "main": "dist/cjs/index.js",
-  "types": "dist/cjs/index.d.ts",
   "devDependencies": {
     "@types/node": "^12.12.6",
     "microbundle": "^0.11.0",
@@ -35,9 +36,6 @@
   },
   "files": [
     "dist/**"
-  ],
-  "sideEffects": [
-    "dist/esm/*.js"
   ],
   "dependencies": {}
 }
