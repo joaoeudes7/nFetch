@@ -9,7 +9,9 @@
   "repository": "https://github.com/joaoeudes7/nFetch",
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf dist && tsc",
+    "build": "rm -rf dist && yarn build-esm & yarn build-cjs",
+    "build-esm": "tsc -p ./tsconfig.browser.json",
+    "build-cjs": "tsc -p ./tsconfig.node.json",
     "build-wp": "rm -rf dist && webpack -p",
     "lint": "tslint -p tsconfig.json",
     "prepublish": "yarn build",
@@ -20,8 +22,8 @@
     "fetch",
     "api"
   ],
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
   "devDependencies": {
     "@types/node": "^12.12.6",
     "ts-loader": "^6.2.1",
@@ -34,6 +36,6 @@
     "dist/**"
   ],
   "sideEffects": [
-    "dist/*.js"
+    "dist/esm/*.js"
   ]
 }

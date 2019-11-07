@@ -1,16 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "es6",
     "moduleResolution": "node",
     "lib": [
       "es5",
       "dom",
       "esnext"
     ],
-    "outDir": "./dist",
     "strictFunctionTypes": true,
     "strictNullChecks": true,
+    "sourceMap": true,
     "noFallthroughCasesInSwitch": true,
     "removeComments": true,
     "strictPropertyInitialization": true,
