@@ -1,18 +1,21 @@
 import { RequestMethod } from "./Config";
 
-export class Response {
-  url: string;
-  data?: any;
-  status: number;
-  headers?: Headers;
-  method: string;
+export class NResponse extends Response {
+  data: any;
+  method: RequestMethod;
 
-  constructor(method: RequestMethod, status: number,  url: string, data?: any, headers?: Headers) {
+  constructor(res: Response, method: RequestMethod) {
+    super();
+
+    // @ TODO resolve this
+    Object.assign(this, res);
+
     this.method = method;
-    this.status = status;
-    this.url = url;
-    this.data = data;
-    this.headers = headers;
+    this.resolveData();
+  }
+
+  private async resolveData() {
+    this.data = await this.json();
   }
 
   /**
@@ -20,5 +23,19 @@ export class Response {
    */
   public toObject<T>() {
     return Object.assign({} as T, this.data);
+  }
+}
+
+export class NTimeout extends NResponse {
+  constructor(resInit: RequestInit, method: RequestMethod) {
+    const status = 408;
+    const statusText = "Timeout";
+
+    const _resInit = Object.assign(resInit, { status, statusText });
+    const res = new Response(null, _resInit);
+
+    super(res, method);
+
+    throw this;
   }
 }
