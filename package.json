@@ -15,19 +15,27 @@
     "build-wp": "rm -rf dist && webpack -p",
     "lint": "tslint -p tsconfig.json",
     "prepublish": "yarn build",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
   "keywords": [
-    "request js/ts",
-    "fetch utils",
-    "api client",
-    "client request"
+    "fetch",
+    "requests",
+    "node",
+    "minimal",
+    "http",
+    "api",
+    "client"
   ],
   "types": "dist/esm/index.d.ts",
   "module": "dist/esm/index.js",
   "main": "dist/cjs/index.js",
   "devDependencies": {
+    "@types/jest": "^24.0.22",
     "@types/node": "^12.12.6",
+    "create-test-server": "^3.0.1",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.1.0",
     "ts-loader": "^6.2.1",
     "ts-node": "^8.4.1",
     "tslib": "^1.10.0",
@@ -37,5 +45,7 @@
   "files": [
     "dist/**"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "node-fetch": "^2.6.0"
+  }
 }
