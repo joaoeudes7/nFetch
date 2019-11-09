@@ -1,7 +1,7 @@
-export type RequestMethod = 'get' | 'post' | 'delete' | 'put' | 'head' | 'patch' | 'options';
+export type NMethod = 'GET' | 'POST' | 'DELETE' | 'PUT' | 'HEAD' | 'PATCH' | 'OPTIONS';
 
 export class NConfig implements RequestInit {
-  baseUrl?: string;
+  prefixUrl: string = "";
   integrity?: string;
   keepalive?: boolean;
   credentials?: RequestCredentials;
@@ -17,4 +17,6 @@ export class NConfig implements RequestInit {
   headers: HeadersInit = {
     'Content-Type': 'text/json'
   };
+
+  interceptEvent?: (res: Response) => any
 }

@@ -1,21 +1,21 @@
-import { NResponse, NTimeout } from './model/Response';
-import { NConfig, RequestMethod } from './model/Config';
+import fetch from 'node-fetch';
+import { NConfig, NMethod } from './model/Config';
 
 export class nfetch {
 
   public configs: NConfig;
 
-  constructor(configs = new NConfig(), public interceptEvent?: () => Response) {
+  constructor(configs = new NConfig()) {
     this.configs = Object.assign(new NConfig(), configs);
   }
 
-  get = (url: string, body?: object, configs?: NConfig) => this.onRequest("get", url, body, configs);
-  post = (url: string, body: object, configs?: NConfig) => this.onRequest("post", url, body, configs);
-  put = (url: string, body: object, configs?: NConfig) => this.onRequest("put", url, body, configs);
-  patch = (url: string, body?: object, configs?: NConfig) => this.onRequest("patch", url, body, configs);
-  head = (url: string, body?: object, configs?: NConfig) => this.onRequest("head", url, body, configs);
-  options = (url: string, body?: object, configs?: NConfig) => this.onRequest("options", url, body, configs);
-  delete = (url: string, body?: object, configs?: NConfig) => this.onRequest("delete", url, body, configs);
+  get = (url: string, configs?: NConfig) => this.onRequest("GET", url, null, configs);
+  post = (url: string, body: object, configs?: NConfig) => this.onRequest("POST", url, body, configs);
+  put = (url: string, body: object, configs?: NConfig) => this.onRequest("PUT", url, body, configs);
+  patch = (url: string, body?: object, configs?: NConfig) => this.onRequest("PATCH", url, body, configs);
+  head = (url: string, configs?: NConfig) => this.onRequest("HEAD", url, null, configs);
+  options = (url: string, body?: object, configs?: NConfig) => this.onRequest("OPTIONS", url, body, configs);
+  delete = (url: string, body?: object, configs?: NConfig) => this.onRequest("DELETE", url, body, configs);
 
   fromForm(url: string, formData: FormData) {
     return {
@@ -23,8 +23,7 @@ export class nfetch {
       put: this.put(url, { body: formData }),
       patch: this.patch(url, { body: formData }),
       options: this.options(url, { body: formData }),
-      delete: this.delete(url, { body: formData }),
-      head: this.head(url, { body: formData }),
+      delete: this.delete(url, { body: formData })
     }
   }
 
@@ -32,8 +31,8 @@ export class nfetch {
    * Used to resolve multi-requests async
    * @param requests Array with requests created by nfetch
    */
-  public async all(requests: Array<Promise<NResponse>>): Promise<NResponse[]> {
-    let data: NResponse[] = [];
+  public async all(requests: Array<Promise<Response>>): Promise<Response[]> {
+    let data: Response[] = [];
 
     for (let req of requests) {
       data.push(await req);
@@ -45,12 +44,12 @@ export class nfetch {
   /**
    * Create request default using fetch
    */
-  private resolveOptions(method: RequestMethod, data: any, configs?: NConfig) {
-    const body = JSON.stringify(data);
+  private resolveOptions(method: NMethod, data: any, configs?: NConfig) {
+    const body = data ? JSON.stringify(data) : null;
 
     let paramsRequest = Object.assign(this.configs, { method, body });
 
-    if (configs != null) {
+    if (!configs) {
       paramsRequest = Object.assign(paramsRequest, configs);
     }
 
@@ -63,19 +62,30 @@ export class nfetch {
    * @param body Body of Request
    * @param configs Resolve custom configs
    */
-  private async onRequest(method: RequestMethod, url: string, body?: any, configs = this.configs): Promise<NResponse> {
-    const urlRequest = this.configs.baseUrl + url;
-    const options = this.resolveOptions(method, configs);
-    const request = fetch(urlRequest, options);
+  private async onRequest(method: NMethod, url: string, body?: any, configs = this.configs): Promise<Response> {
+    const urlRequest = this.configs.prefixUrl + url;
+    const options = this.resolveOptions(method, body, configs);
+
+    const request = fetch(urlRequest, configs);
 
     setTimeout(() => {
-      throw new NTimeout(options, method);
+      this.resolveTimeout(options);
     }, this.configs.timeout);
 
     // Get response
     const res = await this.retry(request, configs.retryLimit);
 
-    return new NResponse(res, method);
+    return res;
+  }
+
+  private resolveTimeout(resInit: RequestInit) {
+    const status = 408;
+    const statusText = "Timeout";
+
+    const _resInit = Object.assign(resInit, { status, statusText });
+    const res = new Response(null, _resInit);
+
+    throw res;
   }
 
   private async retry(request: Promise<Response>, limit: number) {
