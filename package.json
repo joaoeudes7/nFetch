@@ -32,9 +32,14 @@
   "main": "dist/cjs/index.js",
   "devDependencies": {
     "@types/jest": "^24.0.22",
-    "@types/node": "^12.12.6",
+    "@types/koa": "^2.0.52",
+    "@types/koa-router": "^7.0.42",
+    "@types/node-fetch": "^2.5.3",
     "create-test-server": "^3.0.1",
     "jest": "^24.9.0",
+    "koa": "^2.11.0",
+    "koa-json": "^2.0.2",
+    "koa-router": "^7.4.0",
     "ts-jest": "^24.1.0",
     "ts-loader": "^6.2.1",
     "ts-node": "^8.4.1",
@@ -46,6 +51,7 @@
     "dist/**"
   ],
   "dependencies": {
+    "@types/node": "^12.12.6",
     "node-fetch": "^2.6.0"
   }
 }
