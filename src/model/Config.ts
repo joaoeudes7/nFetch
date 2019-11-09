@@ -1,8 +1,11 @@
+import { RequestInit, BodyInit, HeadersInit } from 'node-fetch';
+
 export type NMethod = 'GET' | 'POST' | 'DELETE' | 'PUT' | 'HEAD' | 'PATCH' | 'OPTIONS';
 
 export class NConfig implements RequestInit {
   prefixUrl?: string = "";
   integrity?: string;
+  body?: BodyInit;
   keepalive?: boolean;
   credentials?: RequestCredentials;
   cache?: RequestCache = "default";
@@ -10,10 +13,9 @@ export class NConfig implements RequestInit {
   redirect?: RequestRedirect = "follow";
   referrer?: string;
   referrerPolicy?: ReferrerPolicy;
-  signal?: AbortSignal | null;
   retryLimit? = 3;
   window?: any;
-  timeout? = 10000;
+  timeout? = 60 * 1000;
   headers?: HeadersInit = {
     'Content-Type': 'text/json'
   };

@@ -1,5 +1,7 @@
-import fetch from 'node-fetch';
+import fetch, { Response } from 'node-fetch';
+
 import { NConfig, NMethod } from './model/Config';
+import NResponse from './model/NResponse';
 
 export class nfetch {
 
@@ -62,11 +64,11 @@ export class nfetch {
    * @param body Body of Request
    * @param configs Resolve custom configs
    */
-  private async onRequest(method: NMethod, url: string, body?: any, configs = this.configs): Promise<Response> {
+  private async onRequest(method: NMethod, url: string, body?: any, configs = this.configs): Promise<NResponse> {
     const urlRequest = this.configs.prefixUrl + url;
     const options = this.resolveOptions(method, body, configs);
 
-    const request = fetch(urlRequest, configs);
+    const request = fetch(urlRequest, options);
 
     setTimeout(() => {
       this.resolveTimeout(options);
@@ -75,17 +77,17 @@ export class nfetch {
     // Get response
     const res = await this.retry(request, configs.retryLimit!);
 
-    return res;
+    return new NResponse(res);
   }
 
-  private resolveTimeout(resInit: RequestInit) {
+  private async resolveTimeout(resInit: RequestInit) {
     const status = 408;
     const statusText = "Timeout";
 
     const _resInit = Object.assign(resInit, { status, statusText });
-    const res = new Response(null, _resInit);
+    const res = new Response(undefined, _resInit);
 
-    throw res;
+    throw new NResponse(res);
   }
 
   private async retry(request: Promise<Response>, limit: number) {
