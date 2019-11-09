@@ -1,23 +1,32 @@
-// import nfetch from '../src/index';
+import nfetch from '../src/index';
+import { initServeTest } from './utils';
 
-// async function initServeTest() {
-//   const server =
+const { url } = initServeTest();
 
-//   // Samples requests
-//   server.get('/', (req, res) => res.end(req.method));
-//   server.post('/', (req, res) => res.end(req.method));
-//   server.put('/', (req, res) => res.end(req.method));
-//   server.patch('/', (req, res) => res.end(req.method));
-//   server.delete('/', (req, res) => res.end(req.method));
+describe('Methods', () => {
+  it('Test GET', async () => {
+    const { data } = await nfetch.get(url);
+    expect(data).toBe('GET');
+  })
 
-//   return server;
-// }
+  it('Test POST', async () => {
+    const { data } = await nfetch.post(url, {});
+    expect(data).toBe('POST');
+  })
 
-// describe('GET', () => {
-//   it('Sample', async () => {
-//     const { url } = await initServeTest();
+  it('Test PUT', async () => {
+    const { data } = await nfetch.put(url, {});
+    expect(data).toBe('PUT');
+  })
 
-//     const result = await nfetch.get(url);
-//     expect(await result.text()).toBe('GET');
-//   })
-// });
+  it('Test DELETE', async () => {
+    const { data } = await nfetch.delete(url, {});
+    expect(data).toBe('DELETE');
+  })
+});
+
+describe('Multi-request', () => {
+})
+
+describe('Body', () => {
+})
