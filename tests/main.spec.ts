@@ -1,32 +1,58 @@
 import nfetch from '../src/index';
 import { initServeTest } from './utils';
 
-const { url } = initServeTest();
+const url = 'http://localhost:3000';
 
 describe('Methods', () => {
+  beforeAll(() => initServeTest())
+
   it('Test GET', async () => {
-    const { data } = await nfetch.get(url);
-    expect(data).toBe('GET');
+    const res = await nfetch.get(url);
+    const { method } = await res.data();
+
+    expect(method).toBe('GET');
   })
 
   it('Test POST', async () => {
-    const { data } = await nfetch.post(url, {});
-    expect(data).toBe('POST');
+    const res = await nfetch.post(url, {});
+    const { method } = await res.data();
+
+    expect(method).toBe('POST');
   })
 
   it('Test PUT', async () => {
-    const { data } = await nfetch.put(url, {});
-    expect(data).toBe('PUT');
+    const res = await nfetch.put(url, {});
+    const { method } = await res.data();
+
+    expect(method).toBe('PUT');
   })
 
   it('Test DELETE', async () => {
-    const { data } = await nfetch.delete(url, {});
-    expect(data).toBe('DELETE');
+    const res = await nfetch.delete(url, {});
+    const { method } = await res.data();
+
+    expect(method).toBe('DELETE');
   })
 });
 
 describe('Multi-request', () => {
 })
 
-describe('Body', () => {
+describe('Body Response', () => {
+  const test = 'test'
+
+  it('Test POST', async () => {
+    const res = await nfetch.post(`${url}/body`, { test });
+    expect(await res.data()).toBe({ test });
+  })
+
+  it('Test PUT', async () => {
+    const res = await nfetch.put(`${url}/body`, { test });
+    expect(await res.data()).toBe({ test });
+  })
+
+  it('Test DELETE', async () => {
+    const res = await nfetch.delete(`${url}/body`, { test });
+    expect(await res.data()).toBe({ test });
+  })
 })

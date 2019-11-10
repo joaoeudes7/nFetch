@@ -1,5 +1,3 @@
-import { Response, Headers } from 'node-fetch';
-
 export default class NResponse {
   status!: number;
   headers!: Headers;
@@ -9,9 +7,13 @@ export default class NResponse {
   redirected!: boolean;
   type!: ResponseType;
   data!: any;
+  text!: string;
+  body: ReadableStream<Uint8Array> | null;
+  arrayBuffer: () => Promise<ArrayBuffer>;
+  blob: () => Promise<Blob>;
 
-  constructor(res: Response, data = res.body.read().toString()) {
-    const { status, headers, ok, statusText, url, redirected, type } = res;
+  constructor(res: Response, jsonResolved: any = {}, textResolved: string = "") {
+    const { status, headers, ok, statusText, url, redirected, type, body, arrayBuffer, blob } = res;
 
     this.status = status;
     this.headers = headers;
@@ -20,11 +22,10 @@ export default class NResponse {
     this.url = url;
     this.redirected = redirected;
     this.type = type;
-
-    try {
-      this.data = JSON.parse(data);
-    } catch (error) {
-      this.data = data;
-    }
+    this.body = body;
+    this.arrayBuffer = arrayBuffer;
+    this.blob = blob;
+    this.data = jsonResolved;
+    this.text = textResolved;
   }
 }

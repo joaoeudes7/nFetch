@@ -1,5 +1,3 @@
-import { RequestInit, BodyInit, HeadersInit } from 'node-fetch';
-
 export type NMethod = 'GET' | 'POST' | 'DELETE' | 'PUT' | 'HEAD' | 'PATCH' | 'OPTIONS';
 
 export class NConfig implements RequestInit {

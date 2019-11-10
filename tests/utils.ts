@@ -1,6 +1,5 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
-import * as KoaJson from 'koa-json';
 
 export function initServeTest() {
   const app = new Koa();
@@ -11,19 +10,29 @@ export function initServeTest() {
   const HTTP_PORT = 3000;
 
   router
+    // Methods
     .get("/", sendMethod)
     .post("/", sendMethod)
     .put("/", sendMethod)
     .delete("/", sendMethod)
 
-  app.use(router.routes())
-  app.use(router.allowedMethods());
-  app.use(KoaJson({}));
+    // Body Test
+    .post("/body", sendBody)
+    .put("/body", sendBody)
+    .delete("/body", sendBody)
 
   app.listen(HTTP_PORT, HOST)
 
-  return { url: `http://${HOST}:${HTTP_PORT}` };
+  app
+  .use(router.allowedMethods())
+  .use(router.routes())
+
+  return app;
 }
 
-const sendMethod = async (ctx: Koa.ParameterizedContext) => ctx.body = ctx.method;
-const sendBody = async (ctx: Koa.ParameterizedContext) => ctx.body = ctx.query;
+export function initServerBody() {
+
+}
+
+const sendMethod = async (ctx: any) => ctx.body = { method: ctx.method };
+const sendBody = async (ctx: any) => console.log(ctx.request);

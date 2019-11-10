@@ -1,5 +1,3 @@
-import fetch, { Response } from 'node-fetch';
-
 import { NConfig, NMethod } from './model/Config';
 import NResponse from './model/NResponse';
 
@@ -74,10 +72,10 @@ export class nfetch {
       this.resolveTimeout(options);
     }, this.configs.timeout);
 
-    // Get response
+    // Get response and return
     const res = await this.retry(request, configs.retryLimit!);
 
-    return new NResponse(res);
+    return new NResponse(res, await res.json(), await res.text())
   }
 
   private async resolveTimeout(resInit: RequestInit) {
