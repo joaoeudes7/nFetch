@@ -7,13 +7,13 @@ export default class NResponse {
   redirected!: boolean;
   type!: ResponseType;
   data!: any;
-  text!: string;
   body: ReadableStream<Uint8Array> | null;
   arrayBuffer: () => Promise<ArrayBuffer>;
   blob: () => Promise<Blob>;
+  text: () => Promise<string>;
 
-  constructor(res: Response, jsonResolved: any = {}, textResolved: string = "") {
-    const { status, headers, ok, statusText, url, redirected, type, body, arrayBuffer, blob } = res;
+  constructor(res: Response, jsonResolved: any = {}) {
+    const { status, headers, ok, statusText, url, redirected, type, body, arrayBuffer, blob, text } = res;
 
     this.status = status;
     this.headers = headers;
@@ -26,6 +26,6 @@ export default class NResponse {
     this.arrayBuffer = arrayBuffer;
     this.blob = blob;
     this.data = jsonResolved;
-    this.text = textResolved;
+    this.text = text;
   }
 }

@@ -75,7 +75,7 @@ export class nfetch {
     // Get response and return
     const res = await this.retry(request, configs.retryLimit!);
 
-    return new NResponse(res, await res.json(), await res.text())
+    return new NResponse(res, await res.json())
   }
 
   private async resolveTimeout(resInit: RequestInit) {
