@@ -13,19 +13,17 @@ export default class NResponse {
   text: () => Promise<string>;
 
   constructor(res: Response, jsonResolved: any = {}) {
-    const { status, headers, ok, statusText, url, redirected, type, body, arrayBuffer, blob, text } = res;
-
-    this.status = status;
-    this.headers = headers;
-    this.ok = ok;
-    this.statusText = statusText;
-    this.url = url;
-    this.redirected = redirected;
-    this.type = type;
-    this.body = body;
-    this.arrayBuffer = arrayBuffer;
-    this.blob = blob;
+    this.status = res.status;
+    this.headers = res.headers;
+    this.ok = res.ok;
+    this.statusText = res.statusText;
+    this.url = res.url;
+    this.redirected = res.redirected;
+    this.type = res.type;
+    this.body = res.body;
+    this.arrayBuffer = res.arrayBuffer;
+    this.blob = res.blob;
+    this.text = res.text;
     this.data = jsonResolved;
-    this.text = text;
   }
 }
