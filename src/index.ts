@@ -47,13 +47,7 @@ export class nfetch {
   private resolveOptions(method: NMethod, data: any, configs?: NConfig) {
     const body = data ? JSON.stringify(data) : null;
 
-    let paramsRequest = Object.assign(this.configs, { method, body });
-
-    if (!configs) {
-      paramsRequest = Object.assign(paramsRequest, configs);
-    }
-
-    return paramsRequest;
+    return Object.assign(this.configs, { ...configs, method, body });
   }
 
   /**

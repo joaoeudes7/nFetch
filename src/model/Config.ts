@@ -11,12 +11,10 @@ export class NConfig implements RequestInit {
   redirect?: RequestRedirect = "follow";
   referrer?: string;
   referrerPolicy?: ReferrerPolicy;
-  retryLimit? = 3;
+  retryLimit?= 3;
   window?: any;
-  timeout? = 60 * 1000;
-  headers?: HeadersInit = {
-    'Content-Type': 'text/json'
-  };
+  timeout?= 60 * 1000;
+  headers?: HeadersInit;
 
   interceptEvent?: (res: Response) => any
 }
