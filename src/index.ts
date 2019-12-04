@@ -9,13 +9,13 @@ export class nfetch {
     this.configs = Object.assign(new NConfig(), configs);
   }
 
-  get = (url: string, configs?: NConfig) => this.onRequest("GET", url, null, configs);
-  post = (url: string, body: object, configs?: NConfig) => this.onRequest("POST", url, body, configs);
-  put = (url: string, body: object, configs?: NConfig) => this.onRequest("PUT", url, body, configs);
-  patch = (url: string, body?: object, configs?: NConfig) => this.onRequest("PATCH", url, body, configs);
-  head = (url: string, configs?: NConfig) => this.onRequest("HEAD", url, null, configs);
-  options = (url: string, body?: object, configs?: NConfig) => this.onRequest("OPTIONS", url, body, configs);
-  delete = (url: string, body?: object, configs?: NConfig) => this.onRequest("DELETE", url, body, configs);
+  get = (url: string, configs?: NConfig) => this.onRequest('GET', url, null, configs);
+  post = (url: string, body: object, configs?: NConfig) => this.onRequest('POST', url, body, configs);
+  put = (url: string, body: object, configs?: NConfig) => this.onRequest('PUT', url, body, configs);
+  patch = (url: string, body?: object, configs?: NConfig) => this.onRequest('PATCH', url, body, configs);
+  head = (url: string, configs?: NConfig) => this.onRequest('HEAD', url, null, configs);
+  options = (url: string, body?: object, configs?: NConfig) => this.onRequest('OPTIONS', url, body, configs);
+  delete = (url: string, body?: object, configs?: NConfig) => this.onRequest('DELETE', url, body, configs);
 
   fromForm(url: string, formData: FormData) {
     return {
@@ -31,10 +31,10 @@ export class nfetch {
    * Used to resolve multi-requests async
    * @param requests Array with requests created by nfetch
    */
-  public async all(requests: Array<Promise<Response>>): Promise<Response[]> {
-    let data: Response[] = [];
+  public async all(requests: Promise<Response>[]): Promise<Response[]> {
+    const data: Response[] = [];
 
-    for (let req of requests) {
+    for (const req of requests) {
       data.push(await req);
     }
 
@@ -74,7 +74,7 @@ export class nfetch {
 
   private async resolveTimeout(resInit: RequestInit) {
     const status = 408;
-    const statusText = "Timeout";
+    const statusText = 'Timeout';
 
     const _resInit = Object.assign(resInit, { status, statusText });
     const res = new Response(undefined, _resInit);
